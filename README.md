@@ -1,2 +1,2 @@
-# Planize
-Life Management App
+# planize
+Life Management Platform
