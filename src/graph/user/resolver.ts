@@ -1,25 +1,22 @@
 import User from '../../types/user'
-import { now } from '../../lib/time'
+import { getUsers, insertUser } from '../../db/user'
+import { GenericResponse } from '../../types/api'
 
 const userResolvers = {
   Query: {
-    users: (): User[] => {
-      return [
-        {
-          id: '1',
-          firstName: 'John',
-          lastName: 'Doe',
-          email: 'johndoe@gmail.com',
-          birthDate: now()
-        },
-        {
-          id: '2',
-          firstName: 'Jane',
-          lastName: 'Doe',
-          email: 'janedoe@gmail.com',
-          birthDate: now()
-        }
-      ]
+    users: async (): Promise<User[]> => {
+      const users = await getUsers()
+      return users
+    }
+  },
+  Mutation: {
+    addUser: async (_, { user }: { user: User }): Promise<GenericResponse> => {
+      const id = await insertUser(user)
+      return {
+        success: true,
+        message: `User ${id} added`,
+        data: { id }
+      }
     }
   }
 }

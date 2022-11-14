@@ -9,8 +9,20 @@ const userSchema = gql`
     birthDate: String
   }
 
+  input UserInput {
+    id: ID
+    firstName: String
+    lastName: String
+    email: String
+    birthDate: String
+  }
+
   type Query {
     users: [User]
+  }
+
+  type Mutation {
+    addUser(user: UserInput): GenericResponse
   }
 `
 

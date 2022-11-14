@@ -2,7 +2,7 @@
 import knex from 'knex'
 import config from '../lib/config'
 
-const db = knex({
+const dbConfig = {
   client: 'pg',
   connection: {
     host: config.instanceHost,
@@ -11,6 +11,8 @@ const db = knex({
     password: config.dbPass,
     database: config.dbName
   }
-})
+}
+
+const db = knex(dbConfig)
 
 export default db

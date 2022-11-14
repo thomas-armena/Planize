@@ -1,10 +1,11 @@
+/* eslint-disable import/first */
+import dotenv from 'dotenv' // Load .env file
+dotenv.config()
 import express from 'express'
 import apolloServer from './src/graph/server'
 import logger from './src/lib/logging'
-import dotenv from 'dotenv'
 const app = express()
 const port = 9000
-dotenv.config() // Load .env file
 
 const startServer = async (): Promise<void> => {
   await apolloServer.start()
