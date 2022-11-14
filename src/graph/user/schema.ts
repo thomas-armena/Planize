@@ -19,6 +19,8 @@ const userSchema = gql`
 
   type Query {
     users: [User]
+    user(id: ID!): User
+    loggedInUser: User
   }
 
   type Mutation {

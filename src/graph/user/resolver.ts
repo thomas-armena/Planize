@@ -1,12 +1,30 @@
 import User from '../../types/user'
-import { getUsers, insertUser } from '../../db/user'
+import { getUser, getUsers, insertUser } from '../../db/user'
 import { GenericResponse } from '../../types/api'
+import logger from '../../lib/logging'
 
 const userResolvers = {
   Query: {
     users: async (): Promise<User[]> => {
       const users = await getUsers()
-      return users
+      return users ?? []
+    },
+    user: async (_, { id }): Promise<User | null> => {
+      const user = await getUser(id)
+      return user ?? null
+    },
+    loggedInUser: async (_, __, { userId, email }: { userId: string, email: string }): Promise<User | null> => {
+      logger.info(`User ${userId} with email ${email} is logged in`)
+      const existingUser = await getUser(userId)
+      if (existingUser != null) return existingUser
+      const newUserId = await insertUser({
+        id: userId,
+        email
+      })
+      logger.info(`Created new user with id ${newUserId}`)
+      const newUser = await getUser(newUserId)
+      logger.info(newUser)
+      return newUser
     }
   },
   Mutation: {
