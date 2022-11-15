@@ -8,6 +8,11 @@ export const insertUser = async (user: User): Promise<string> => {
   return row.id ?? ''
 }
 
+export const upsertUser = async (user: User): Promise<string> => {
+  const [row] = await db(UserDBName).insert(user, ['id']).onConflict('id').merge()
+  return row.id ?? ''
+}
+
 export const getUsers = async (): Promise<User[] | null> => {
   const users = await db(UserDBName).select().table(UserDBName)
   return users

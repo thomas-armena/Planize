@@ -25,6 +25,7 @@ const userSchema = gql`
 
   type Mutation {
     addUser(user: UserInput): GenericResponse
+    updateUser(user: UserInput): GenericResponse
   }
 `
 

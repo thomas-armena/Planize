@@ -1,5 +1,5 @@
 import User from '../../types/user'
-import { getUser, getUsers, insertUser } from '../../db/user'
+import { getUser, getUsers, insertUser, upsertUser } from '../../db/user'
 import { GenericResponse } from '../../types/api'
 import logger from '../../lib/logging'
 
@@ -33,6 +33,14 @@ const userResolvers = {
       return {
         success: true,
         message: `User ${id} added`,
+        data: { id }
+      }
+    },
+    updateUser: async (_, { user }: { user: User }): Promise<GenericResponse> => {
+      const id = await upsertUser(user)
+      return {
+        success: true,
+        message: `User ${id} updated`,
         data: { id }
       }
     }
