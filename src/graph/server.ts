@@ -5,17 +5,19 @@ import logger from '../lib/logging'
 import manageResolvers from './manage/resolver'
 import manageSchema from './manage/schema'
 import rootSchema from './rootSchema'
+import todoResolvers from './todo/resolver'
+import todoSchema from './todo/schema'
 import userResolvers from './user/resolver'
 import userSchema from './user/schema'
 
 const apolloServer = new ApolloServer({
-  typeDefs: [rootSchema, userSchema, manageSchema],
-  resolvers: [userResolvers, manageResolvers],
+  typeDefs: [rootSchema, userSchema, manageSchema, todoSchema],
+  resolvers: [userResolvers, manageResolvers, todoResolvers],
   context: async ({ req }) => {
     const tokenId = req?.headers?.authorization ?? ''
-    logger.info(`Token ID: ${tokenId}`)
     try {
       const decodedToken = await firebaseApp.auth().verifyIdToken(tokenId)
+      logger.info(decodedToken)
       const userId = decodedToken?.uid ?? ''
       const email = decodedToken?.email ?? ''
       return {
@@ -23,6 +25,8 @@ const apolloServer = new ApolloServer({
         email
       }
     } catch (error) {
+      logger.error("Couldn't verify token", error)
+      logger.error(error)
       return {}
     }
   }
